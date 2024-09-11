@@ -1,6 +1,5 @@
 import React from "react";
 import Product from "./Product";
-import Total from "./Total";
 
 const MainProducts = ({
   products,
