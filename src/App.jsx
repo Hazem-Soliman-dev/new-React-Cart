@@ -11,13 +11,30 @@ const App = () => {
     { id: 4, name: "kranshy", price: 400, items: 1 },
   ]);
 
+  const [newProducts] = useState([
+    { id: 1, name: "chipsy", price: 100, items: 1 },
+    { id: 2, name: "pepsi", price: 200, items: 1 },
+    { id: 3, name: "cigaretes", price: 300, items: 1 },
+    { id: 4, name: "kranshy", price: 400, items: 1 },
+  ]);
+
+  const [bgColor, setbgColor] = useState(true);
+
   const increminent = (id) => {
-    setProducts( products.map( (product) => product.id === id ? { ...product, items: product.items + 1 } : product ) );
+    setProducts(
+      products.map((product) =>
+        product.id === id ? { ...product, items: product.items + 1 } : product
+      )
+    );
   };
 
   const decreminent = (id, items) => {
-    if (items > 1) { 
-      setProducts( products.map((product) => product.id === id ? { ...product, items: product.items - 1 } : product ) );
+    if (items > 1) {
+      setProducts(
+        products.map((product) =>
+          product.id === id ? { ...product, items: product.items - 1 } : product
+        )
+      );
     } else {
       setProducts(products.filter((product) => product.id !== id));
     }
@@ -27,21 +44,23 @@ const App = () => {
     setProducts([]);
   };
 
-  const addFromBtn = (name, price) => {
-    const productFound = products.find((product) => product.name === name);
-    if (productFound) {
-      setProducts( products.map((product) => product.id === productFound.id ? { ...product, items: product.items + 1 } : product ) );
+  const addFromBtn = ({ id, name, price }) => {
+    if (products.find((product) => product.id === id)) {
+      setProducts(
+        products.map((product) =>
+          product.id === id ? { ...product, items: product.items + 1 } : product
+        )
+      );
     } else {
-      addNewProduct(name, price);
+      setProducts([...products, { id, name, price, items: 1 }]);
     }
   };
 
-  const addNewProduct = (name, price) => {
-    setProducts( [ ...products, { id: products.length + 1, name, price, items: 1 }, ] );
-  };
-
   const cartIndex = () => {
-    return products.reduce( (total, product) => total + (product.items > 0 ? product.items : 0), 0 );
+    return products.reduce(
+      (total, product) => total + (product.items > 0 ? product.items : 0),
+      0
+    );
   };
 
   const calckPrice = (total) => {
@@ -49,22 +68,33 @@ const App = () => {
   };
 
   const calckAllPrice = () => {
-    let total = products.map( (product) => product.items * product.price ).reduce( (total, price) => total + price, 0 );
-    total > 0 ? total : (total = "undefined data");
+    let total = products
+      .map((product) => product.items * product.price)
+      .reduce((total, price) => total + price, 0);
+    total > 0 ? total : (total = "no data");
     return total;
   };
 
-  const [dark, setDark] = useState(false);
   const toggleTheme = () => {
-    setDark(!dark);
+    setbgColor(!bgColor);
     document.body.classList.toggle("dark");
   };
 
   return (
     <main className="min-h-screen w-screen bg-white dark:bg-black dark:text-white">
       <Navbar cartIndex={cartIndex()} calckAllPrice={calckAllPrice} />
-      <Buttons addFromBtn={addFromBtn} removeAllProducts={removeAllProducts} toggleTheme={toggleTheme}/>
-      <MainProducts products={products} increminent={increminent} decreminent={decreminent} calckPrice={calckPrice}/>
+      <Buttons
+        newProducts={newProducts}
+        addFromBtn={addFromBtn}
+        removeAllProducts={removeAllProducts}
+        toggleTheme={toggleTheme}
+      />
+      <MainProducts
+        products={products}
+        increminent={increminent}
+        decreminent={decreminent}
+        calckPrice={calckPrice}
+      />
     </main>
   );
 };
